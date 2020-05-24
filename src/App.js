@@ -1,21 +1,32 @@
-import React from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import "./styles.css";
+
+import ContactCard from './components/contactCard'
+
 
 function App() {
-  const message = "This is my first variable rendered in JSX!";
+  const [contacts, setContacts] = useState([]);
 
-  const handleClick = () => {
-    alert("you clicked the message!");
-  }
+  useEffect(() => {
+    fetch("https://randomuser.me/api/?results=3")
+      .then(response => response.json())
+      .then(data => {
+        setContacts(data.results);
+      });
+  }, []);
+
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Hello kings</h1>
-        <h2 onClick={handleClick}>{message}</h2>
-
-      </header>
-    </div>
+    <>
+      {contacts.map(contact => (
+        <ContactCard
+          avatar={contact.picture.large}
+          name={contact.name.first + " " + contact.name.last}
+          email={contact.email}
+          age={contact.dob.age}
+        />
+      ))}
+    </>
   );
 }
 
